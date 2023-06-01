@@ -1,0 +1,93 @@
+ .register-page {
+    position: relative;
+  }
+  
+  .register-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url(https://picsum.photos/id/11/2500/1667);
+    background-size: cover;
+    opacity: 0.8; /* Adjust the opacity value as per your preference */
+    z-index: -1;
+  }
+
+  .register-card {
+    width: 400px;
+    margin-top: 4rem;
+    margin-left: 29rem;
+    padding: 20px;
+    border-radius: 10px;
+    background-color: #fff;
+    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
+    z-index: 1;
+  }
+  
+  
+  
+.register-container {
+    width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    border-radius: 10px;
+    background-color: rgba(255, 255, 255, 0.8);
+    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(5px);
+    position: relative;
+  }
+  
+  .register-container:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url(https://picsum.photos/id/11/2500/1667);
+    background-size: cover;
+    filter: blur(5px);
+    opacity: 0.5;
+    z-index: -1;
+  }
+  
+  .register-container h1 {
+    text-align: center;
+  }
+  
+  .register-container form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .register-container label {
+    margin-bottom: 0.5rem;
+  }
+  
+  .register-container input[type="text"],
+  .register-container input[type="password"] {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 1rem;
+  }
+  
+  .register-container button[type="submit"] {
+    padding: 10px;
+    background-color: #4285f4;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .register-container p {
+    text-align: center;
+    margin-top: 1rem;
+  }
+  
+  .register-container p a {
+    color: #4285f4;
+    text-decoration: none;
+  } 
