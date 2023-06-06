@@ -1,9 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import './Login.css';
 
 const Login = () => {
+  useEffect(() => {
+    document.title = "Login";
+  }, []);
   const [username, setName] = useState('');
   const [email, setEmail] = useState('');
+  
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -32,12 +36,11 @@ const Login = () => {
   };
 
   return (
+    <div className="login-container">
     <div id="carouselExampleIndicators" className="carousel slide" data-bs-ride="carousel">
       <div className="carousel-inner">
-         <div className="carousel-item">
-          
-        </div> 
-      </div>
+         
+     
       <form className="login-card" onSubmit={handleSubmit}>
         <div className="card-body">
           <h1 className="card-title">LOGIN</h1>
@@ -54,6 +57,8 @@ const Login = () => {
         </div>
         <button className="btn btn-primary" type="submit">Login</button>
       </form>
+    </div>
+    </div>
     </div>
   );
 };

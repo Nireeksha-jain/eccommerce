@@ -160,14 +160,12 @@
   .close-button {
     position: absolute;
     top: 0;
-    left: 90%;
+    left: 87%;
     color: black;
     background-color: transparent;
     border: none;
     cursor: pointer;
     font-size: 18px;
   }
-  form button:hover {
-    background-color: #78b67a; 
-  }
+  
   

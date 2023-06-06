@@ -11,6 +11,7 @@ nav {
   z-index: 999;
 }
 
+
 .content-container {
   margin-top: 60px; /* Adjust the margin-top value based on your navbar height */
   padding: 20px;
@@ -21,7 +22,7 @@ nav a {
   color: #F4EEE0;
   font-weight: bold;
   font-size: 1.3rem;
-  padding: 8.2px;
+  padding: 9.9px;
 }
 
 nav a:hover {
@@ -35,9 +36,13 @@ nav .active {
 nav .content {
   display: flex;
   align-items: center;
-  margin-left: 49rem;
+  margin-left: 45rem;
+  font-family: 'Chivo Mono', monospace;
+font-family: 'Comic Neue', cursive;
+font-family: 'Roboto', sans-serif;
+font-family: 'Ubuntu', sans-serif;
 }
 
 nav .content > * {
-  margin-left: 69px; /* Adjust the margin value to add the desired space */
+  margin-left: 70px; /* Adjust the margin value to add the desired space */
 }

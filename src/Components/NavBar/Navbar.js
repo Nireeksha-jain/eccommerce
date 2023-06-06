@@ -8,9 +8,12 @@ import {
 } from "react-router-dom";
 import { FaShoppingCart } from "react-icons/fa";
 import "./Navbar.css";
-import Product from "./Product";
-import Cart from "./Cart";
-import Login from "./Login";
+import Product from "../Products/Product";
+import Cart from "../Cart/Cart";
+import Login from "../../Login/Login";
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Chivo+Mono:wght@100&family=Comic+Neue&family=Roboto&family=Ubuntu:wght@300&display=swap');
+</style>
 
 const Navbar = () => {
   const [cartItems, setCartItems] = useState([]);

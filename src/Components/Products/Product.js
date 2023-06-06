@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import './Product.css';
 import { FaTh, FaList } from 'react-icons/fa';
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Chivo+Mono:wght@100&family=Comic+Neue&family=Lato:wght@300;400&family=Roboto&family=Ubuntu:wght@300&display=swap');
+</style>
 
 const Product = ({ updateCart }) => {
   const [products, setProducts] = useState([]);
@@ -9,6 +12,10 @@ const Product = ({ updateCart }) => {
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [selectedQuantity, setSelectedQuantity] = useState(1);
+
+  useEffect(() => {
+    document.title = "Products";
+  }, []);
 
   useEffect(() => {
     fetch('http://localhost:8089/api/products/')
@@ -111,8 +118,12 @@ const Product = ({ updateCart }) => {
               <div className="product-info">
                 <h2>{product.name}</h2>
                 <p> ₹{product.price}</p>
-                <p> ★{product.reviews}</p>
-                {view === 'list' && <p>Quantity available: {product.quantity_available}</p>}
+                <p className="star-rating">
+    {[...Array(product.reviews)].map((_, index) => (
+      <span key={index} className="star">&#9733;</span>
+    ))}
+  </p>
+                {/* {view === 'list' && <p>Quantity available: {product.quantity_available}</p>} */}
               </div>
               <div className="product-actions">
                 {selectedProduct && selectedProduct.product_id === product.product_id ? (

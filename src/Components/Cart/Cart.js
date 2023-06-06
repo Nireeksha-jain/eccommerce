@@ -1,17 +1,22 @@
 import React, { useState, useEffect } from "react";
 import "./Cart.css";
 import { IconContext } from "react-icons";
+import { Toast, ToastHeader } from "reactstrap";
 
 const Cart = ({ cartItems, clearCart, removeFromCart }) => {
   const [showForm, setShowForm] = useState(false);
   const [formError, setFormError] = useState(false);
   const [orderStatus, setOrderStatus] = useState(1);
   const [name, setName] = useState("");
-  const [mobileNumber, setmobileNumber] = useState("");
+  const [mobileNumber, setMobileNumber] = useState("");
   const [address, setAddress] = useState("");
   const [cartItemsWithImageUrl, setCartItemsWithImageUrl] = useState([]);
   const [orderSuccess, setOrderSuccess] = useState(false);
   const [redirectToProducts, setRedirectToProducts] = useState(false);
+
+  useEffect(() => {
+    document.title = "Cart";
+  }, []);
 
   useEffect(() => {
     fetchImageUrls();
@@ -89,13 +94,7 @@ const Cart = ({ cartItems, clearCart, removeFromCart }) => {
       });
       
       if (response.ok) {
-       
-
-        // Delay showing the "Order Successful" message to allow time for clearing the cart
-        setTimeout(() => {
-          setOrderSuccess(true);
-        }, 500);
-
+        setOrderSuccess(true);
         setTimeout(() => {
           setOrderSuccess(false);
           setShowForm(false);
@@ -142,14 +141,14 @@ const Cart = ({ cartItems, clearCart, removeFromCart }) => {
           <div className="form-card">
             <div className="form-header">
               <h3>Enter Your Details</h3>
+            </div>
+            <form onSubmit={handleSubmit}>
               <button
                 className="close-button"
                 onClick={() => setShowForm(false)}
               >
                 X
               </button>
-            </div>
-            <form onSubmit={handleSubmit}>
               {formError && <p>Please fill in all fields.</p>}
               <input
                 type="text"
@@ -161,7 +160,7 @@ const Cart = ({ cartItems, clearCart, removeFromCart }) => {
                 type="text"
                 placeholder="Phone Number"
                 value={mobileNumber}
-                onChange={(e) => setmobileNumber(e.target.value)}
+                onChange={(e) => setMobileNumber(e.target.value)}
               />
               <input
                 type="text"
@@ -172,14 +171,10 @@ const Cart = ({ cartItems, clearCart, removeFromCart }) => {
               <button type="submit">Submit</button>
             </form>
           </div>
+          
         </div>
       )}
-
-      {orderSuccess && (
-        <div className="order-success">
-          <h3>Order Successful</h3>
-        </div>
-      )}
+      
     </div>
   );
 };
