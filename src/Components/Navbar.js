@@ -1,21 +1,38 @@
-import React, { useState } from 'react';
-import { Link, NavLink, Route, Routes, BrowserRouter as Router } from 'react-router-dom';
-import { FaShoppingCart } from 'react-icons/fa';
-import './Navbar.css';
-import Product from './Product';
-import Cart from './Cart';
-import Login from './Login';
+import React, { useState } from "react";
+import {
+  Link,
+  NavLink,
+  Route,
+  Routes,
+  BrowserRouter as Router,
+} from "react-router-dom";
+import { FaShoppingCart } from "react-icons/fa";
+import "./Navbar.css";
+import Product from "./Product";
+import Cart from "./Cart";
+import Login from "./Login";
 
 const Navbar = () => {
   const [cartItems, setCartItems] = useState([]);
 
   const updateCart = (item) => {
-    setCartItems((prevCartItems) => [...prevCartItems, item]);
+    setCartItems((prevCartItems) => {
+      let isAlreadyAvailable = false;
+      prevCartItems.map((i) => {
+        if (item.product_id === i.product_id) {
+          i.quantity += item.quantity;
+          isAlreadyAvailable = true;
+        }
+      });
+      if (isAlreadyAvailable) return prevCartItems;
+      return [...prevCartItems, item];
+    });
   };
 
   const removeFromCart = (itemId) => {
-    setCartItems((prevCartItems) =>
-      prevCartItems.filter((item) => item.id !== itemId)
+    setCartItems(
+      (prevCartItems) =>
+        prevCartItems.filter((item) => item.product_id !== itemId) // Vishal
     );
   };
 
@@ -27,8 +44,8 @@ const Navbar = () => {
     <Router>
       <nav>
         <div className="content">
-          <Link to="/login">LOGIN</Link>
-          <Link to="/">PRODUCTS</Link>
+          <Link to="/">LOGIN</Link>
+          <Link to="/products">PRODUCTS</Link>
           <NavLink to="/cart" activeClassName="active">
             <FaShoppingCart />
             <span className="cart-count">{cartItems.length}</span>
@@ -38,9 +55,9 @@ const Navbar = () => {
 
       <div className="content-container">
         <Routes>
-          <Route path="/login" element={<Login />} />
+          <Route path="/" element={<Login />} />
           <Route
-            path="/"
+            path="/products"
             element={<Product updateCart={updateCart} />}
           />
           <Route
@@ -48,7 +65,9 @@ const Navbar = () => {
             element={
               <Cart
                 cartItems={cartItems}
-                removeFromCart={removeFromCart}
+                removeFromCart={(id) => {
+                  removeFromCart(id);
+                }}
                 clearCart={clearCart}
               />
             }

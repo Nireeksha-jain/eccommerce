@@ -51,6 +51,7 @@
     border: none;
     border-radius: 4px;
     cursor: pointer;
+    color: #ffffff;
   }
   
   .checkout-button:hover {
@@ -106,6 +107,7 @@
   }
   
   .form-card {
+    position: relative;
     background-color: white;
     padding: 20px;
     border-radius: 4px;
@@ -156,12 +158,14 @@
   }
   
   .close-button {
+    position: absolute;
+    top: 0;
+    left: 90%;
+    color: black;
     background-color: transparent;
     border: none;
     cursor: pointer;
     font-size: 18px;
-    padding: 0;
-    margin-bottom:3rem;
   }
   form button:hover {
     background-color: #78b67a; 

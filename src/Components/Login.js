@@ -2,19 +2,20 @@ import React, { useState } from 'react';
 import './Login.css';
 
 const Login = () => {
-  const [name, setName] = useState('');
+  const [username, setName] = useState('');
   const [email, setEmail] = useState('');
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Perform the API call here
+   
     fetch(`http://localhost:8089/api/login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        mode:'no-cors'
       },
-      body: JSON.stringify({ name, email }),
+      body: JSON.stringify({ username, email }),
     })
       .then((response) => {
         if (response.ok) {
@@ -33,9 +34,9 @@ const Login = () => {
   return (
     <div id="carouselExampleIndicators" className="carousel slide" data-bs-ride="carousel">
       <div className="carousel-inner">
-        <div className="carousel-item">
-          <img src="https://picsum.photos/id/456/1200/600" className="d-block w-100" alt="..." />
-        </div>
+         <div className="carousel-item">
+          
+        </div> 
       </div>
       <form className="login-card" onSubmit={handleSubmit}>
         <div className="card-body">
@@ -44,7 +45,7 @@ const Login = () => {
         <div className="name">
           <label htmlFor="name" className="form-label">Name</label>
           <br />
-          <input type="text" className="form-control" id="name" placeholder="John Doe" value={name} onChange={(e) => setName(e.target.value)} />
+          <input type="text" className="form-control" id="name" placeholder="John Doe" value={username} onChange={(e) => setName(e.target.value)} />
         </div>
         <div className="email">
           <label htmlFor="email" className="form-label">Email</label>

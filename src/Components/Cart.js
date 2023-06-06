@@ -1,17 +1,17 @@
-import React, { useState, useEffect } from 'react';
-import './Cart.css';
-import { IconContext } from 'react-icons';
+import React, { useState, useEffect } from "react";
+import "./Cart.css";
+import { IconContext } from "react-icons";
 
 const Cart = ({ cartItems, clearCart, removeFromCart }) => {
   const [showForm, setShowForm] = useState(false);
   const [formError, setFormError] = useState(false);
-  const [orderStatus,setOrderStatus]=useState(1);
-  const [name, setName] = useState('');
-  const [mobileNumber, setmobileNumber] = useState('');
-  const [address, setAddress] = useState('');
+  const [orderStatus, setOrderStatus] = useState(1);
+  const [name, setName] = useState("");
+  const [mobileNumber, setmobileNumber] = useState("");
+  const [address, setAddress] = useState("");
   const [cartItemsWithImageUrl, setCartItemsWithImageUrl] = useState([]);
   const [orderSuccess, setOrderSuccess] = useState(false);
-  const [finalPrice,setfinalPrice]=useState(0);
+  const [redirectToProducts, setRedirectToProducts] = useState(false);
 
   useEffect(() => {
     fetchImageUrls();
@@ -21,16 +21,18 @@ const Cart = ({ cartItems, clearCart, removeFromCart }) => {
     const updatedCartItems = await Promise.all(
       cartItems.map(async (item) => {
         try {
-          const response = await fetch(`http://localhost:8089/api/products/${item.product_id}/image`);
+          const response = await fetch(
+            `http://localhost:8089/api/products/${item.product_id}/image`
+          );
           if (response.ok) {
             const imageUrl = await response.text();
             const price = parseFloat(item.price); // Convert price to a number
             return { ...item, imageUrl, price };
           } else {
-            console.error('Error fetching image:', response.statusText);
+            console.error("Error fetching image:", response.statusText);
           }
         } catch (error) {
-          console.error('Error fetching image:', error.message);
+          console.error("Error fetching image:", error.message);
         }
         return item;
       })
@@ -44,33 +46,25 @@ const Cart = ({ cartItems, clearCart, removeFromCart }) => {
   };
 
   const handleRemoveFromCart = (itemId) => {
-    const updatedCartItems = cartItems.filter((item) => item.product_id !== itemId);
-    removeFromCart(updatedCartItems);
+    setCartItemsWithImageUrl((prevData) =>
+      prevData.filter((items) => items.product_id !== itemId)
+    );
+    removeFromCart(itemId);
   };
-  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!name || !mobileNumber || !address) {
       setFormError(true);
       return;
     }
-  
+
     setFormError(false);
-  
-    // const order = {
-    //   name,
-    //   mobileNumber,
-    //   address,
-    //   items: cartItems.map((item) => ({
-    //     product_id: item.product_id, // Update to use "product_id" instead of "productId"
-    //     quantity: item.quantity,
-    //     totalPrice: item.quantity * item.price,
-    //   })),
-    // };
+
     const totalPrice = cartItems.reduce((total, item) => {
       return total + item.quantity * item.price;
     }, 0);
-  
+
     const order = {
       name,
       mobileNumber,
@@ -80,42 +74,41 @@ const Cart = ({ cartItems, clearCart, removeFromCart }) => {
       items: cartItems.map((item) => ({
         product_id: item.product_id,
         quantity: item.quantity,
-       
       })),
-  
     };
-    console.log(totalPrice)
+    setCartItemsWithImageUrl([]);
+    clearCart();
+    setShowForm(false);
     try {
-      const response = await fetch('http://localhost:8089/api/orders/', {
-        method: 'POST',
+      const response = await fetch("http://localhost:8089/api/orders/", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
-          
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(order),
-       
       });
-      console.log(response.json());
+      
       if (response.ok) {
-        const responseData = await response.json();
-        console.log(responseData);
-    
-        clearCart();
-        setOrderSuccess(true);
-  
+       
+
+        // Delay showing the "Order Successful" message to allow time for clearing the cart
+        setTimeout(() => {
+          setOrderSuccess(true);
+        }, 500);
+
         setTimeout(() => {
           setOrderSuccess(false);
-        }, 1000);
-  
-        setShowForm(false);
+          setShowForm(false);
+          setRedirectToProducts(true);
+        }, 1500);
       } else {
-        console.error('Error creating :', response.statusText);
+        console.error("Error creating order:", response.statusText);
       }
     } catch (error) {
-      console.error('Error creating order:', error.message);
+      console.error("Error creating order:", error.message);
     }
   };
-  
+
   return (
     <div>
       <h2>Cart</h2>
@@ -132,7 +125,9 @@ const Cart = ({ cartItems, clearCart, removeFromCart }) => {
                 <p>Price: ₹{item.quantity * item.price}</p>
               </div>
               <div className="cart-item-actions">
-                <button onClick={() => handleRemoveFromCart(item.product_id)}>Remove</button>
+                <button onClick={() => handleRemoveFromCart(item.product_id)}>
+                  Remove
+                </button>
               </div>
             </div>
           ))}
@@ -147,7 +142,12 @@ const Cart = ({ cartItems, clearCart, removeFromCart }) => {
           <div className="form-card">
             <div className="form-header">
               <h3>Enter Your Details</h3>
-              <button className="close-button" onClick={() => setShowForm(false)}>X</button>
+              <button
+                className="close-button"
+                onClick={() => setShowForm(false)}
+              >
+                X
+              </button>
             </div>
             <form onSubmit={handleSubmit}>
               {formError && <p>Please fill in all fields.</p>}
@@ -159,7 +159,7 @@ const Cart = ({ cartItems, clearCart, removeFromCart }) => {
               />
               <input
                 type="text"
-                placeholder="mobileNumber Number"
+                placeholder="Phone Number"
                 value={mobileNumber}
                 onChange={(e) => setmobileNumber(e.target.value)}
               />
@@ -178,7 +178,6 @@ const Cart = ({ cartItems, clearCart, removeFromCart }) => {
       {orderSuccess && (
         <div className="order-success">
           <h3>Order Successful</h3>
-          <p>Your order will be delivered soon.</p>
         </div>
       )}
     </div>

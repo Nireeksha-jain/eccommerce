@@ -46,15 +46,15 @@ const Product = ({ updateCart }) => {
   };
   
 
-  // const removeFromCart = (item) => {
-  //   if (item.quantity > 0) {
-  //     const updatedItem = {
-  //       ...item,
-  //       quantity: item.quantity - 1,
-  //     };
-  //     updateCart(updatedItem);
-  //   }
-  // };
+  const removeFromCart = (item) => {
+    if (item.quantity > 0) {
+      const updatedItem = {
+        ...item,
+        quantity: item.quantity - 1,
+      };
+      updateCart(updatedItem);
+    }
+  };
 
   const toggleView = () => {
     setView(view === 'grid' ? 'list' : 'grid');
@@ -111,6 +111,10 @@ const Product = ({ updateCart }) => {
               <div className="product-info">
                 <h2>{product.name}</h2>
                 <p> ₹{product.price}</p>
+                <p> {() => {
+                    for (let i = 0; i < product.reviews; i++) 
+                     <span> ★ </span>
+                  }}{product.reviews}</p>
                 {view === 'list' && <p>Quantity available: {product.quantity_available}</p>}
               </div>
               <div className="product-actions">

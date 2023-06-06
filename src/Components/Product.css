@@ -46,7 +46,7 @@
     padding: 7px;
     border: none;
     border-radius: 3px;
-    
+    color: black;
   }
   .next  button:hover {
     background-color: rgb(72, 195, 158);
@@ -63,10 +63,12 @@
     border: none;
     border-radius: 3px;
     padding: 5px;
+    color: black;
   }
 
   .page button:hover{
     background-color: bisque;
+    
   }
   
   /* Product Card */
@@ -118,7 +120,7 @@
 .list-view .product-details {
   display: flex;
   flex-direction: column;
-  margin-left: 20px;
+  margin-left: 1px;
 }
 
 .list-view .product-title {
@@ -133,7 +135,7 @@
 .list-view .product-actions {
   display: flex;
   align-items: center;
-  margin-top: 10px;
+  margin-top: 1px;
 }
 
 .list-view .product-actions button {
@@ -143,5 +145,5 @@
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  margin-left: 10px;
+  margin-left: 1px;
 }
