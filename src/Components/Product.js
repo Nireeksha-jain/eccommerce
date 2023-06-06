@@ -111,10 +111,7 @@ const Product = ({ updateCart }) => {
               <div className="product-info">
                 <h2>{product.name}</h2>
                 <p> ₹{product.price}</p>
-                <p> {() => {
-                    for (let i = 0; i < product.reviews; i++) 
-                     <span> ★ </span>
-                  }}{product.reviews}</p>
+                <p> ★{product.reviews}</p>
                 {view === 'list' && <p>Quantity available: {product.quantity_available}</p>}
               </div>
               <div className="product-actions">
