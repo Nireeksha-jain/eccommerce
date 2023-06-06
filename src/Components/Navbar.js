@@ -4,17 +4,19 @@ import { FaShoppingCart } from 'react-icons/fa';
 import './Navbar.css';
 import Product from './Product';
 import Cart from './Cart';
+import Login from './Login';
 
 const Navbar = () => {
   const [cartItems, setCartItems] = useState([]);
 
   const updateCart = (item) => {
-    setCartItems([...cartItems, item]);
+    setCartItems((prevCartItems) => [...prevCartItems, item]);
   };
 
   const removeFromCart = (itemId) => {
-    const updatedCartItems = cartItems.filter((item) => item.id !== itemId);
-    setCartItems(updatedCartItems);
+    setCartItems((prevCartItems) =>
+      prevCartItems.filter((item) => item.id !== itemId)
+    );
   };
 
   const clearCart = () => {
@@ -25,6 +27,7 @@ const Navbar = () => {
     <Router>
       <nav>
         <div className="content">
+          <Link to="/login">LOGIN</Link>
           <Link to="/">PRODUCTS</Link>
           <NavLink to="/cart" activeClassName="active">
             <FaShoppingCart />
@@ -35,6 +38,7 @@ const Navbar = () => {
 
       <div className="content-container">
         <Routes>
+          <Route path="/login" element={<Login />} />
           <Route
             path="/"
             element={<Product updateCart={updateCart} />}
@@ -45,7 +49,7 @@ const Navbar = () => {
               <Cart
                 cartItems={cartItems}
                 removeFromCart={removeFromCart}
-                clearCart={clearCart} // Pass clearCart function to Cart component
+                clearCart={clearCart}
               />
             }
           />

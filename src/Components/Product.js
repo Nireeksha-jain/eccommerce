@@ -1,15 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Product.css';
 import { FaTh, FaList } from 'react-icons/fa';
-import ProductDetails from './ProductDetails';
 
 const Product = ({ updateCart }) => {
-  const [products, setProducts] = useState(ProductDetails);
+  const [products, setProducts] = useState([]);
   const [view, setView] = useState('grid');
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [selectedQuantity, setSelectedQuantity] = useState(1);
+
+  useEffect(() => {
+    fetch('http://localhost:8089/api/products/')
+      .then(response => response.json())
+      .then(data => setProducts(data))
+      .catch(error => console.error('Error fetching products:', error));
+  }, []);
 
   const totalItems = products.length;
   const totalPages = Math.ceil(totalItems / itemsPerPage);
@@ -19,27 +25,36 @@ const Product = ({ updateCart }) => {
   const currentItems = products.slice(indexOfFirstItem, indexOfLastItem);
 
   const addToCart = (item) => {
-    if (selectedQuantity > item.quantityAvailable) {
-      alert(`Quantity available is only ${item.quantityAvailable}`);
+    if (!selectedQuantity || selectedQuantity <= 0) {
+      alert("Please enter a valid quantity.");
       return;
     }
+  
+    if (selectedQuantity > item.quantity_available) {
+      alert(`Quantity available is only ${item.quantity_available}`);
+      return;
+    }
+  
     const updatedItem = {
       ...item,
-      quantity: item.quantity + selectedQuantity,
+      quantity: selectedQuantity,
     };
+  
     updateCart(updatedItem);
     setSelectedProduct(null);
+    setSelectedQuantity(1); // Reset the selected quantity to 1 after adding to cart
   };
+  
 
-  const removeFromCart = (item) => {
-    if (item.quantity > 0) {
-      const updatedItem = {
-        ...item,
-        quantity: item.quantity - 1,
-      };
-      updateCart(updatedItem);
-    }
-  };
+  // const removeFromCart = (item) => {
+  //   if (item.quantity > 0) {
+  //     const updatedItem = {
+  //       ...item,
+  //       quantity: item.quantity - 1,
+  //     };
+  //     updateCart(updatedItem);
+  //   }
+  // };
 
   const toggleView = () => {
     setView(view === 'grid' ? 'list' : 'grid');
@@ -61,6 +76,7 @@ const Product = ({ updateCart }) => {
   const handleAddToCart = (product) => {
     setSelectedProduct(product);
   };
+  
 
   const handleQuantityChange = (e) => {
     setSelectedQuantity(parseInt(e.target.value));
@@ -80,25 +96,25 @@ const Product = ({ updateCart }) => {
       </div>
       <div className={view === 'grid' ? 'grid-view' : 'list-view'}>
         {currentItems.map((product) => (
-          <div className={`product ${view === 'list' ? 'list-layout' : ''}`} key={product.id}>
+          <div className={`product ${view === 'list' ? 'list-layout' : ''}`} key={product.product_id}>
             {view === 'list' && (
               <div className="product-image-container">
-                <img className="product-image" src={product.imageUrl} alt={product.name} />
+                <img className="product-image" src={product.image_url} alt={product.name} />
               </div>
             )}
             <div className="product-details">
               {view === 'grid' && (
                 <div className="product-image-container">
-                  <img className="product-image" src={product.imageUrl} alt={product.name} />
+                  <img className="product-image" src={product.image_url} alt={product.name} />
                 </div>
               )}
               <div className="product-info">
                 <h2>{product.name}</h2>
-                <p>{product.price}</p>
-                {view === 'list' && <p>Quantity available: {product.quantityAvailable}</p>}
+                <p> ₹{product.price}</p>
+                {view === 'list' && <p>Quantity available: {product.quantity_available}</p>}
               </div>
               <div className="product-actions">
-                {selectedProduct && selectedProduct.id === product.id ? (
+                {selectedProduct && selectedProduct.product_id === product.product_id ? (
                   <div className="quantity-container">
                     <input
                       type="number"
@@ -107,8 +123,9 @@ const Product = ({ updateCart }) => {
                       onChange={handleQuantityChange}
                     />
                     <button className="add-to-cart-button" onClick={() => addToCart(selectedProduct)}>
-                      Add to Cart
+                    Add to Cart
                     </button>
+
                   </div>
                 ) : (
                   <button className="add-to-cart-button" onClick={() => handleAddToCart(product)}>
@@ -122,10 +139,10 @@ const Product = ({ updateCart }) => {
       </div>
       <div className="pagination">
         <div className="page">
-        <button onClick={() => changeItemsPerPage(10)}>10 per page</button>
-        <button onClick={() => changeItemsPerPage(20)}>20 per page</button>
+          <button onClick={() => changeItemsPerPage(10)}>10 per page</button>
+          <button onClick={() => changeItemsPerPage(20)}>20 per page</button>
         </div>
-        <div className='next'> 
+        <div className="next"> 
           <button onClick={goToPreviousPage} disabled={currentPage === 1}>
             Previous
           </button>

@@ -1,65 +1,138 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Cart.css';
+import { IconContext } from 'react-icons';
 
-const Cart = ({ cartItems, removeFromCart, clearCart }) => {
+const Cart = ({ cartItems, clearCart, removeFromCart }) => {
   const [showForm, setShowForm] = useState(false);
   const [formError, setFormError] = useState(false);
+  const [orderStatus,setOrderStatus]=useState(1);
   const [name, setName] = useState('');
-  const [phone, setPhone] = useState('');
+  const [mobileNumber, setmobileNumber] = useState('');
   const [address, setAddress] = useState('');
+  const [cartItemsWithImageUrl, setCartItemsWithImageUrl] = useState([]);
   const [orderSuccess, setOrderSuccess] = useState(false);
+  const [finalPrice,setfinalPrice]=useState(0);
+
+  useEffect(() => {
+    fetchImageUrls();
+  }, []);
+
+  const fetchImageUrls = async () => {
+    const updatedCartItems = await Promise.all(
+      cartItems.map(async (item) => {
+        try {
+          const response = await fetch(`http://localhost:8089/api/products/${item.product_id}/image`);
+          if (response.ok) {
+            const imageUrl = await response.text();
+            const price = parseFloat(item.price); // Convert price to a number
+            return { ...item, imageUrl, price };
+          } else {
+            console.error('Error fetching image:', response.statusText);
+          }
+        } catch (error) {
+          console.error('Error fetching image:', error.message);
+        }
+        return item;
+      })
+    );
+
+    setCartItemsWithImageUrl(updatedCartItems);
+  };
 
   const handleCheckout = () => {
     setShowForm(true);
   };
 
   const handleRemoveFromCart = (itemId) => {
-    removeFromCart(itemId);
+    const updatedCartItems = cartItems.filter((item) => item.product_id !== itemId);
+    removeFromCart(updatedCartItems);
   };
-
-  const handleSubmit = (e) => {
+  
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Perform form validation
-    if (!name || !phone || !address) {
+    if (!name || !mobileNumber || !address) {
       setFormError(true);
       return;
     }
-
-    // Clear form error if present
+  
     setFormError(false);
-
-    // Clear the cart
-    clearCart();
-
-    // Show the "Order Successful" message
-    setOrderSuccess(true);
-
-    // Reset the "Order Successful" message after 1 second
-    setTimeout(() => {
-      setOrderSuccess(false);
-    }, 1000);
-
-    // Close the form overlay
-    setShowForm(false);
+  
+    // const order = {
+    //   name,
+    //   mobileNumber,
+    //   address,
+    //   items: cartItems.map((item) => ({
+    //     product_id: item.product_id, // Update to use "product_id" instead of "productId"
+    //     quantity: item.quantity,
+    //     totalPrice: item.quantity * item.price,
+    //   })),
+    // };
+    const totalPrice = cartItems.reduce((total, item) => {
+      return total + item.quantity * item.price;
+    }, 0);
+  
+    const order = {
+      name,
+      mobileNumber,
+      address,
+      orderStatus,
+      totalPrice,
+      items: cartItems.map((item) => ({
+        product_id: item.product_id,
+        quantity: item.quantity,
+       
+      })),
+  
+    };
+    console.log(totalPrice)
+    try {
+      const response = await fetch('http://localhost:8089/api/orders/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          
+        },
+        body: JSON.stringify(order),
+       
+      });
+      console.log(response.json());
+      if (response.ok) {
+        const responseData = await response.json();
+        console.log(responseData);
+    
+        clearCart();
+        setOrderSuccess(true);
+  
+        setTimeout(() => {
+          setOrderSuccess(false);
+        }, 1000);
+  
+        setShowForm(false);
+      } else {
+        console.error('Error creating :', response.statusText);
+      }
+    } catch (error) {
+      console.error('Error creating order:', error.message);
+    }
   };
-
+  
   return (
     <div>
       <h2>Cart</h2>
-      {cartItems.length === 0 ? (
+      {cartItemsWithImageUrl.length === 0 ? (
         <p>Your cart is empty.</p>
       ) : (
         <div>
-          {cartItems.map((item) => (
-            <div className="cart-item" key={item.id}>
-              <img src={item.imageUrl} alt={item.title} />
+          {cartItemsWithImageUrl.map((item) => (
+            <div className="cart-item" key={item.product_id}>
+              <img src={item.imageUrl} alt={item.name} />
               <div className="cart-item-content">
                 <h3>{item.name}</h3>
                 <p>Quantity: {item.quantity}</p>
-                <p className="price">Total Price: ${item.quantity * item.price}</p>
+                <p>Price: ₹{item.quantity * item.price}</p>
               </div>
               <div className="cart-item-actions">
-                <button onClick={() => handleRemoveFromCart(item.id)}>Remove</button>
+                <button onClick={() => handleRemoveFromCart(item.product_id)}>Remove</button>
               </div>
             </div>
           ))}
@@ -86,9 +159,9 @@ const Cart = ({ cartItems, removeFromCart, clearCart }) => {
               />
               <input
                 type="text"
-                placeholder="Phone Number"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
+                placeholder="mobileNumber Number"
+                value={mobileNumber}
+                onChange={(e) => setmobileNumber(e.target.value)}
               />
               <input
                 type="text"

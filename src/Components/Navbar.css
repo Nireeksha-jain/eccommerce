@@ -3,7 +3,7 @@ nav {
   justify-content: space-between;
   align-items: center;
   background-color: #1A120B;
-  padding: 10px;
+  padding: 1px;
   position: fixed;
   top: 0;
   left: 0;
@@ -21,7 +21,7 @@ nav a {
   color: #F4EEE0;
   font-weight: bold;
   font-size: 1.3rem;
-  padding: 4px;
+  padding: 8.2px;
 }
 
 nav a:hover {
@@ -35,7 +35,7 @@ nav .active {
 nav .content {
   display: flex;
   align-items: center;
-  margin-left: 55rem;
+  margin-left: 49rem;
 }
 
 nav .content > * {

@@ -42,12 +42,4 @@
     background-position: center;
     background-repeat: no-repeat;
   }
-.register-link {
-  margin-top: 1rem;
-  text-align: center;
-}
 
-.register-link a {
-  color: blue;
-  text-decoration: underline;
-}

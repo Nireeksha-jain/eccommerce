@@ -1,42 +1,60 @@
-// import React from 'react';
-// import { Link } from 'react-router-dom';
-// import './Login.css';
+import React, { useState } from 'react';
+import './Login.css';
 
-// const Login = () => {
-//   return (
-//     <div id="carouselExampleIndicators" className="carousel slide" data-bs-ride="carousel">
-//       <div className="carousel-inner">
-//         <div className="carousel-item">
-//           <img src="https://picsum.photos/id/456/1200/600" className="d-block w-100" alt="..." />
-//         </div>
-//       </div>
-//       <form className="login-card">
-//         <div className="card-body">
-//           <h1 className="card-title">LOGIN</h1>
-//         </div>
-//         <div className="name">
-//           <label htmlFor="Name" className="form-label">Name</label>
-//           <br />
-//           <input type="name" className="form-control" id="name" placeholder="John Doe" />
-//         </div>
-//         <div className="phone">
-//           <label htmlFor="Phone num" className="form-label">Phone number</label>
-//           <br />
-//           <input type="phone" className="form-control" id="phonenum" placeholder="1234567890" />
-//         </div>
-//         <div className="pass">
-//           <label htmlFor="Password" className="form-label">Password</label>
-//           <br />
-//           <input type="password" className="form-control" id="pass" placeholder="**********" />
-//         </div>
-//         <button className="btn btn-primary" type="submit">Login</button>
-//         <p className="register-link">
-//         New user? <Link to="/register">Register here</Link>
-//       </p>
-//       </form>
-      
-//     </div>
-//   );
-// }
+const Login = () => {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
 
-// export default Login;
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    // Perform the API call here
+    fetch(`http://localhost:8089/api/login`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ name, email }),
+    })
+      .then((response) => {
+        if (response.ok) {
+          console.log('User logged in successfully');
+          // Redirect to the products page
+          window.location.href = '/products';
+        } else {
+          console.log('Login failed');
+        }
+      })
+      .catch((error) => {
+        console.error('Error occurred during login:', error);
+      });
+  };
+
+  return (
+    <div id="carouselExampleIndicators" className="carousel slide" data-bs-ride="carousel">
+      <div className="carousel-inner">
+        <div className="carousel-item">
+          <img src="https://picsum.photos/id/456/1200/600" className="d-block w-100" alt="..." />
+        </div>
+      </div>
+      <form className="login-card" onSubmit={handleSubmit}>
+        <div className="card-body">
+          <h1 className="card-title">LOGIN</h1>
+        </div>
+        <div className="name">
+          <label htmlFor="name" className="form-label">Name</label>
+          <br />
+          <input type="text" className="form-control" id="name" placeholder="John Doe" value={name} onChange={(e) => setName(e.target.value)} />
+        </div>
+        <div className="email">
+          <label htmlFor="email" className="form-label">Email</label>
+          <br />
+          <input type="email" className="form-control" id="email" placeholder="johndoe@gmail.com" value={email} onChange={(e) => setEmail(e.target.value)} />
+        </div>
+        <button className="btn btn-primary" type="submit">Login</button>
+      </form>
+    </div>
+  );
+};
+
+export default Login;
